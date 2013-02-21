@@ -1,6 +1,6 @@
 import time
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 class RedisLock:
 
@@ -9,7 +9,7 @@ class RedisLock:
         self.lock_timeout = lock_timeout
         self.redis = redis
 
-    def acquire_lock(self):
+    def acquire(self):
         now = int(time.time())
         result = self.redis.setnx(self.lock_key, now + self.lock_timeout + 1)
         if result == 1 or result is True:
@@ -33,7 +33,7 @@ class RedisLock:
 
         return False
 
-    def release_lock(self):
+    def release(self):
         now = int(time.time())
         if now > self.acquire_time + self.lock_timeout:
             # key expired, do nothing and let other clients handle it
